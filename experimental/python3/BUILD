@@ -6,19 +6,11 @@ load("@package_bundle//file:packages.bzl", "packages")
 load("@package_bundle_debian10//file:packages.bzl", packages_debian10 = "packages")
 
 DISTRO_PACKAGES = {
-    "_debian9": packages,
     "_debian10": packages_debian10,
 }
 
 # distribution-specific deb dependencies
 DISTRO_DEBS = {
-    "_debian9": [
-        "libncursesw5",
-        "libpython3.5-minimal",
-        "libpython3.5-stdlib",
-        "libtinfo5",
-        "python3.5-minimal",
-    ],
     "_debian10": [
         "libffi6",
         "libncursesw6",
@@ -32,7 +24,6 @@ DISTRO_DEBS = {
 }
 
 DISTRO_VERSION = {
-    "_debian9": "3.5",
     "_debian10": "3.7",
 }
 
@@ -68,22 +59,16 @@ DISTRO_VERSION = {
 ) for mode in [
     "",
     ":debug",
-]] for distro_suffix in ("_debian9", "_debian10")]
+]] for distro_suffix in ("_debian10")]
 
 [container_test(
     name = "python3" + distro_suffix + "_test",
     size = "medium",
     configs = ["testdata/python3.yaml"],
     image = ":python3" + distro_suffix,
-) for distro_suffix in ("_debian9", "_debian10")]
+) for distro_suffix in ("_debian10")]
 
 # tests for version-specific things
-container_test(
-    name = "debian9_test",
-    size = "medium",
-    configs = ["testdata/debian9.yaml"],
-    image = ":python3_debian9",
-)
 
 container_test(
     name = "debian10_test",
@@ -92,13 +77,13 @@ container_test(
     image = ":python3_debian10",
 )
 
-# Provide aliases so the default images use debian9
+# Provide aliases so the default images use debian10
 alias(
     name = "python3",
-    actual = ":python3_debian9",
+    actual = ":python3_debian10",
 )
 
 alias(
     name = "debug",
-    actual = ":debug_debian9",
+    actual = ":debug_debian10",
 )
